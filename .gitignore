@@ -1,0 +1,6 @@
+.superpowers/
+target/
+.idea/
+.vscode/
+*.iml
+*.log
