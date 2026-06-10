@@ -127,7 +127,7 @@ function initLoginParticles() {
 
 function initActiveNavigation() {
     const currentPath = window.location.pathname.replace(/\/$/, "") || "/dashboard";
-    document.querySelectorAll(".side-nav a[href]").forEach((link) => {
+    document.querySelectorAll(".side-nav a[href], .bento-nav-links a[href], .mini-nav a[href]").forEach((link) => {
         const linkPath = new URL(link.href, window.location.origin).pathname.replace(/\/$/, "");
         const isActive = currentPath === linkPath || (linkPath !== "/dashboard" && currentPath.startsWith(linkPath));
         if (isActive) {

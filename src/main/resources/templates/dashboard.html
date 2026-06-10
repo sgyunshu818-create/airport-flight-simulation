@@ -5,156 +5,124 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>运行态势 - 天枢机场</title>
     <link rel="stylesheet" th:href="@{/css/app.css}">
-    <script th:src="@{/js/app.js}" defer></script>
 </head>
-<body class="dashboard-hud-page">
-<div class="simulation-shell">
-    <aside class="mini-sidebar" aria-label="主导航">
-        <a class="mini-brand" th:href="@{/dashboard}" aria-label="天枢机场">TS</a>
-        <nav class="mini-nav">
-            <a class="nav-icon is-active" th:href="@{/dashboard}" title="运行概览">览</a>
-            <a class="nav-icon" th:href="@{/flights}" title="航班调度">航</a>
-            <a class="nav-icon" th:href="@{/runways}" title="跑道资源">跑</a>
-            <a class="nav-icon" th:href="@{/gates}" title="停机位">位</a>
-            <a class="nav-icon" th:href="@{/simulation}" title="仿真控制">仿</a>
-            <a class="nav-icon" th:href="@{/records}" title="事件日志">志</a>
-            <a class="nav-icon" th:href="@{/statistics}" title="统计分析">析</a>
-        </nav>
-        <div class="mini-clock">
-            <strong data-live-clock>--:--</strong>
-            <span data-live-date>运行日期</span>
-        </div>
-    </aside>
+<body class="dashboard-hud-page bento-dashboard-page">
+<header th:replace="~{fragments/header :: topbar}"></header>
 
-    <main class="viewport">
-        <section class="viewport-canvas" aria-label="机场全景运行态势">
-            <div class="panoptic-grid"></div>
-            <div class="radar-sweep"></div>
-            <div class="weather-layer" data-layer="weather" aria-hidden="true"></div>
-            <div class="heatmap-layer is-visible" data-layer="heatmap" aria-hidden="true">
-                <span class="heat-node heat-a"></span>
-                <span class="heat-node heat-b"></span>
-                <span class="heat-node heat-c"></span>
+<main class="bento-layout">
+    <section class="bento-hero">
+        <div class="bento-kicker">AIRPORT OPERATIONS SIMULATION</div>
+        <h1>运行态势</h1>
+        <p>以机场全局视角监控航班调度、跑道容量、停机位资源与异常事件处置。</p>
+    </section>
+
+    <section class="bento-grid" aria-label="机场运行总览">
+        <article class="bento-item map-hero">
+            <div class="bento-item-head">
+                <div>
+                    <span>Live Surface</span>
+                    <strong>机场运行态势图</strong>
+                </div>
+                <div class="layer-switcher" aria-label="图层控制">
+                    <button type="button" class="is-active" data-layer-toggle="heatmap">热力</button>
+                    <button type="button" class="is-active" data-layer-toggle="conflict">冲突</button>
+                    <button type="button" data-layer-toggle="weather">天气</button>
+                    <button type="button" data-view-preset="global">全局</button>
+                    <button type="button" data-view-preset="terminal">航站</button>
+                    <button type="button" data-view-preset="runway">跑道</button>
+                </div>
             </div>
-            <svg class="conflict-layer is-visible" data-layer="conflict" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-                <path class="conflict-line" d="M 28 52 C 42 38, 56 38, 70 58"></path>
-                <text x="51" y="43">[!] CONFLICT</text>
-            </svg>
-            <div class="panoptic-airport">
-                <div class="hud-runway runway-a">
-                    <span class="runway-end start">36L</span>
-                    <span class="runway-id">RUNWAY 36L / 18R</span>
-                    <span class="runway-end end">18R</span>
+
+            <section class="viewport-canvas" aria-label="机场全景运行态势">
+                <div class="panoptic-grid"></div>
+                <div class="radar-sweep"></div>
+                <div class="weather-layer" data-layer="weather" aria-hidden="true"></div>
+                <div class="heatmap-layer is-visible" data-layer="heatmap" aria-hidden="true">
+                    <span class="heat-node heat-a"></span>
+                    <span class="heat-node heat-b"></span>
+                    <span class="heat-node heat-c"></span>
                 </div>
-                <div class="hud-runway runway-b">
-                    <span class="runway-end start">18L</span>
-                    <span class="runway-id">RUNWAY 36R / 18L</span>
-                    <span class="runway-end end">36R</span>
+                <svg class="conflict-layer is-visible" data-layer="conflict" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+                    <path class="conflict-line" d="M 28 52 C 42 38, 56 38, 70 58"></path>
+                    <text x="51" y="43">[!] CONFLICT</text>
+                </svg>
+                <div class="panoptic-airport">
+                    <div class="hud-runway runway-a">
+                        <span class="runway-end start">36L</span>
+                        <span class="runway-id">RUNWAY 36L / 18R</span>
+                        <span class="runway-end end">18R</span>
+                    </div>
+                    <div class="hud-runway runway-b">
+                        <span class="runway-end start">18L</span>
+                        <span class="runway-id">RUNWAY 36R / 18L</span>
+                        <span class="runway-end end">36R</span>
+                    </div>
+                    <div class="hud-taxiway taxi-main"></div>
+                    <div class="hud-taxiway taxi-north"></div>
+                    <div class="hud-taxiway taxi-south"></div>
+                    <div class="hud-stands">
+                        <span class="hud-stand" th:each="gate, iter : ${gates}" th:if="${iter.index < 24}"
+                              th:classappend="${gate.status.name() == 'OCCUPIED' ? ' is-busy' : ''}"
+                              th:text="${gate.gateNo}">A01</span>
+                        <th:block th:if="${#lists.isEmpty(gates)}">
+                            <span class="hud-stand">A01</span><span class="hud-stand is-busy">A02</span><span class="hud-stand">A03</span><span class="hud-stand">A04</span>
+                            <span class="hud-stand">B01</span><span class="hud-stand">B02</span><span class="hud-stand is-alert">B03</span><span class="hud-stand">B04</span>
+                            <span class="hud-stand">C01</span><span class="hud-stand">C02</span><span class="hud-stand">C03</span><span class="hud-stand">C04</span>
+                        </th:block>
+                    </div>
+                    <span class="flight-marker marker-a">CA1357</span>
+                    <span class="flight-marker marker-b">MU5532</span>
+                    <span class="flight-marker marker-c">CZ3456</span>
                 </div>
-                <div class="hud-taxiway taxi-main"></div>
-                <div class="hud-taxiway taxi-north"></div>
-                <div class="hud-taxiway taxi-south"></div>
-                <div class="hud-stands">
-                    <span class="hud-stand" th:each="gate, iter : ${gates}" th:if="${iter.index < 24}"
-                          th:classappend="${gate.status.name() == 'OCCUPIED' ? ' is-busy' : ''}"
-                          th:text="${gate.gateNo}">A01</span>
-                    <th:block th:if="${#lists.isEmpty(gates)}">
-                        <span class="hud-stand">A01</span><span class="hud-stand is-busy">A02</span><span class="hud-stand">A03</span><span class="hud-stand">A04</span>
-                        <span class="hud-stand">B01</span><span class="hud-stand">B02</span><span class="hud-stand is-alert">B03</span><span class="hud-stand">B04</span>
-                        <span class="hud-stand">C01</span><span class="hud-stand">C02</span><span class="hud-stand">C03</span><span class="hud-stand">C04</span>
-                    </th:block>
+                <div class="hud-context-menu" data-context-menu hidden>
+                    <button type="button">查看详情</button>
+                    <button type="button">强制延误</button>
+                    <button type="button">分配跑道</button>
+                    <button type="button">跟随视角</button>
                 </div>
-                <span class="flight-marker marker-a">CA1357</span>
-                <span class="flight-marker marker-b">MU5532</span>
-                <span class="flight-marker marker-c">CZ3456</span>
+            </section>
+        </article>
+
+        <article class="bento-item stat-flights">
+            <span class="bento-label">Flights Today</span>
+            <strong th:text="${summary.totalFlights}">0</strong>
+            <p><span th:text="${summary.arrivalFlights}">0</span> 进港 / <span th:text="${summary.departureFlights}">0</span> 出港</p>
+        </article>
+
+        <article class="bento-item stat-delay">
+            <span class="bento-label">Delay Rate</span>
+            <strong th:text="${summary.delayRate + '%'}">0%</strong>
+            <div class="bento-ring" th:style="'--value:' + ${summary.delayRate} + '%'"></div>
+            <p><span th:text="${summary.delayedFlights}">0</span> 架延误，<span th:text="${summary.waitingFlights}">0</span> 架等待</p>
+        </article>
+
+        <article class="bento-item resource-card">
+            <span class="bento-label">Resource Load</span>
+            <div class="resource-row"><span>跑道</span><div class="bar"><span th:style="'--value:' + ${summary.runwayOccupancyRate} + '%'"></span></div><strong th:text="${summary.runwayOccupancyRate + '%'}">0%</strong></div>
+            <div class="resource-row"><span>机位</span><div class="bar"><span th:style="'--value:' + ${summary.gateOccupancyRate} + '%'"></span></div><strong th:text="${summary.gateOccupancyRate + '%'}">0%</strong></div>
+            <div class="resource-row"><span>完成</span><div class="bar"><span th:style="'--value:' + ${summary.completionRate} + '%'"></span></div><strong th:text="${summary.completionRate + '%'}">0%</strong></div>
+        </article>
+
+        <article class="bento-item queue-card">
+            <div class="bento-item-head">
+                <div><span>Queue</span><strong>延误队列</strong></div>
+                <a th:href="@{/flights}">查看</a>
             </div>
-            <div class="hud-context-menu" data-context-menu hidden>
-                <button type="button">查看详情</button>
-                <button type="button">强制延误</button>
-                <button type="button">分配跑道</button>
-                <button type="button">跟随视角</button>
+            <div class="compact-list">
+                <a class="compact-row" th:each="flight, iter : ${flights}" th:if="${iter.index < 5 && (flight.status.name() == 'DELAYED' || flight.status.name() == 'WAITING')}"
+                   th:href="@{/flights/{id}/edit(id=${flight.id})}">
+                    <span th:text="${flight.flightNo}">MU5532</span>
+                    <b th:text="${flight.delayMinutes + 'm'}">12m</b>
+                </a>
+                <p class="hud-empty" th:if="${summary.waitingFlights + summary.delayedFlights == 0}">当前无等待或延误航班</p>
             </div>
-        </section>
+        </article>
 
-        <header class="hud-topbar">
-            <section class="glass-panel ops-telemetry">
-                <strong>天枢机场运行态势</strong>
-                <span>中雨 18°C</span>
-                <span>WIND 320°/18kt</span>
-                <span>VIS 8000m</span>
-                <span>QNH 1012</span>
-            </section>
-            <section class="glass-panel metric-bento" aria-label="关键运行指标">
-                <div class="mini-metric"><span>总航班</span><strong th:text="${summary.totalFlights}">0</strong></div>
-                <div class="mini-metric"><span>进港</span><strong th:text="${summary.arrivalFlights}">0</strong></div>
-                <div class="mini-metric"><span>出港</span><strong th:text="${summary.departureFlights}">0</strong></div>
-                <div class="mini-metric is-alert"><span>延误</span><strong th:text="${summary.delayedFlights}">0</strong></div>
-            </section>
-            <section class="glass-panel layer-switcher" aria-label="图层控制">
-                <button type="button" class="is-active" data-layer-toggle="heatmap">热力</button>
-                <button type="button" class="is-active" data-layer-toggle="conflict">冲突</button>
-                <button type="button" data-layer-toggle="weather">天气</button>
-                <button type="button" data-view-preset="global">全局</button>
-                <button type="button" data-view-preset="terminal">航站</button>
-                <button type="button" data-view-preset="runway">跑道</button>
-            </section>
-        </header>
-
-        <aside class="hud-inspector glass-panel">
-            <section class="inspector-section">
-                <div class="section-title">
-                    <span>ALERT QUEUE</span>
-                    <strong th:text="${summary.waitingFlights + summary.delayedFlights}">0</strong>
-                </div>
-                <div class="compact-list">
-                    <a class="compact-row" th:each="flight, iter : ${flights}" th:if="${iter.index < 5 && (flight.status.name() == 'DELAYED' || flight.status.name() == 'WAITING')}"
-                       th:href="@{/flights/{id}/edit(id=${flight.id})}">
-                        <span th:text="${flight.flightNo}">MU5532</span>
-                        <b th:text="${flight.delayMinutes + 'm'}">12m</b>
-                    </a>
-                    <p class="hud-empty" th:if="${summary.waitingFlights + summary.delayedFlights == 0}">当前无等待或延误航班</p>
-                </div>
-            </section>
-
-            <section class="inspector-section">
-                <div class="section-title">
-                    <span>RESOURCE LOAD</span>
-                    <strong th:text="${summary.completionRate + '%'}">0%</strong>
-                </div>
-                <div class="hud-resource">
-                    <span>跑道</span><div class="hud-bar"><i th:style="'--value:' + ${summary.runwayOccupancyRate} + '%'"></i></div><b th:text="${summary.runwayOccupancyRate + '%'}">0%</b>
-                    <span>机位</span><div class="hud-bar"><i th:style="'--value:' + ${summary.gateOccupancyRate} + '%'"></i></div><b th:text="${summary.gateOccupancyRate + '%'}">0%</b>
-                    <span>完成</span><div class="hud-bar"><i th:style="'--value:' + ${summary.completionRate} + '%'"></i></div><b th:text="${summary.completionRate + '%'}">0%</b>
-                    <span>延误</span><div class="hud-bar is-warn"><i th:style="'--value:' + ${summary.delayRate} + '%'"></i></div><b th:text="${summary.delayRate + '%'}">0%</b>
-                </div>
-            </section>
-
-            <section class="inspector-section">
-                <div class="section-title">
-                    <span>EVENT STREAM</span>
-                    <a th:href="@{/records}">打开</a>
-                </div>
-                <div class="event-stream">
-                    <a class="event-row" th:each="record : ${recentRecords}" th:href="@{/records}">
-                        <time th:text="${record.eventTime}">14:28:05</time>
-                        <span th:text="${record.eventType}">DELAY</span>
-                        <p th:text="${record.description}">航班运行事件</p>
-                    </a>
-                    <p class="hud-empty" th:if="${#lists.isEmpty(recentRecords)}">暂无事件日志</p>
-                </div>
-            </section>
-        </aside>
-
-        <footer class="hud-console glass-panel">
-            <div class="console-controls">
-                <div class="sim-readout">
-                    <span>SIMULATION TIME</span>
+        <article class="bento-item timeline-span">
+            <div class="bento-item-head">
+                <div>
+                    <span>Timeline</span>
                     <strong th:text="${latestTask != null && latestTask.currentTime != null ? latestTask.currentTime : '未创建任务'}">14:20:11</strong>
-                </div>
-                <div class="console-actions">
-                    <a class="button primary" th:href="@{/simulation}">单步推进</a>
-                    <a class="button" th:href="@{/simulation}">自动运行</a>
-                    <a class="button" th:href="@{/flights/new}">新增航班</a>
                 </div>
                 <div class="time-warp" data-time-warp>
                     <button type="button" class="is-active" data-speed="1">1x</button>
@@ -163,37 +131,41 @@
                     <button type="button" data-speed="10">10x</button>
                     <button type="button" data-speed="MAX">MAX</button>
                 </div>
-                <div class="task-readout" th:if="${latestTask != null}">
-                    <span th:text="${latestTask.taskName}">日常运行场景</span>
-                    <b class="status status-ok" th:text="${latestTask.status}">RUNNING</b>
-                </div>
-                <div class="task-readout" th:if="${latestTask == null}">
-                    <span>暂无仿真任务</span>
-                    <b class="status">IDLE</b>
-                </div>
             </div>
-            <div class="console-timeline">
-                <div class="event-ticker" aria-label="实时事件播报">
-                    <div class="ticker-track">
-                        <span>[14:22:01] MU5532 推出停机位</span>
-                        <span>[14:22:05] 跑道 36L 阵风告警</span>
-                        <span>[14:23:10] CZ3456 等待滑行许可</span>
-                        <span>[14:24:20] 热点区域容量接近阈值</span>
-                    </div>
-                </div>
-                <div class="timeline-ruler">
-                    <span>08:00</span><span>10:00</span><span>12:00</span><span>14:00</span><span>16:00</span><span>18:00</span><span>20:00</span>
-                </div>
-                <div class="flight-strips">
-                    <a class="flight-strip" th:each="flight, iter : ${flights}" th:if="${iter.index < 8}"
-                       th:href="@{/flights/{id}/edit(id=${flight.id})}"
-                       th:style="'--x:' + ${6 + iter.index * 10} + '%; --w:' + ${18 + iter.index * 2} + '%'">
-                        <span th:text="${flight.flightNo}">CA1357</span>
-                    </a>
-                </div>
+            <div class="timeline-ruler">
+                <span>08:00</span><span>10:00</span><span>12:00</span><span>14:00</span><span>16:00</span><span>18:00</span><span>20:00</span>
             </div>
-        </footer>
-    </main>
-</div>
+            <div class="flight-strips">
+                <a class="flight-strip" th:each="flight, iter : ${flights}" th:if="${iter.index < 8}"
+                   th:href="@{/flights/{id}/edit(id=${flight.id})}"
+                   th:style="'--x:' + ${6 + iter.index * 10} + '%; --w:' + ${18 + iter.index * 2} + '%'">
+                    <span th:text="${flight.flightNo}">CA1357</span>
+                </a>
+            </div>
+        </article>
+
+        <article class="bento-item action-card">
+            <span class="bento-label">Simulation</span>
+            <a class="button primary" th:href="@{/simulation}">进入仿真控制</a>
+            <a class="button" th:href="@{/flights/new}">新增航班</a>
+            <a class="button" th:href="@{/operations/conflicts}">查看冲突建议</a>
+        </article>
+
+        <article class="bento-item log-list">
+            <div class="bento-item-head">
+                <div><span>Events</span><strong>事件流</strong></div>
+                <a th:href="@{/records}">打开</a>
+            </div>
+            <div class="event-stream">
+                <a class="event-row" th:each="record : ${recentRecords}" th:href="@{/records}">
+                    <time th:text="${record.eventTime}">14:28:05</time>
+                    <span th:text="${record.eventType}">DELAY</span>
+                    <p th:text="${record.description}">航班运行事件</p>
+                </a>
+                <p class="hud-empty" th:if="${#lists.isEmpty(recentRecords)}">暂无事件日志</p>
+            </div>
+        </article>
+    </section>
+</main>
 </body>
 </html>

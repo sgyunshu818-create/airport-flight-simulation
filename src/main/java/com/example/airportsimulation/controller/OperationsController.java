@@ -2,6 +2,7 @@ package com.example.airportsimulation.controller;
 
 import com.example.airportsimulation.service.OperationsInsightService;
 import com.example.airportsimulation.service.OperationsInsightService.ImportResult;
+import java.util.Arrays;
 import java.nio.charset.StandardCharsets;
 import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
@@ -79,10 +80,17 @@ public class OperationsController {
     }
 
     private ResponseEntity<byte[]> csv(String filename, String content) {
-        byte[] bytes = content.getBytes(StandardCharsets.UTF_8);
+        byte[] bytes = withUtf8Bom(content);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(new MediaType("text", "csv", StandardCharsets.UTF_8));
         headers.setContentDisposition(ContentDisposition.attachment().filename(filename).build());
         return ResponseEntity.ok().headers(headers).body(bytes);
+    }
+
+    private byte[] withUtf8Bom(String content) {
+        byte[] csvBytes = content.getBytes(StandardCharsets.UTF_8);
+        byte[] bytes = Arrays.copyOf(new byte[] {(byte) 0xEF, (byte) 0xBB, (byte) 0xBF}, csvBytes.length + 3);
+        System.arraycopy(csvBytes, 0, bytes, 3, csvBytes.length);
+        return bytes;
     }
 }

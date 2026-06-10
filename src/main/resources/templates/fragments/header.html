@@ -2,63 +2,36 @@
 <html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
 <body>
 <div th:fragment="topbar">
-    <aside class="sidebar">
+    <header class="bento-nav" role="banner">
         <a class="brand" th:href="@{/dashboard}" aria-label="返回运行概览">
             <span class="brand-mark" aria-hidden="true">AF</span>
             <span class="brand-text">
                 <strong>天枢机场</strong>
-                <small>仿真运营系统</small>
+                <small>FlightSim Ops</small>
             </span>
         </a>
 
-        <nav class="side-nav" aria-label="主导航">
-            <a th:href="@{/dashboard}"><span>⌂</span>运行概览</a>
-            <a th:href="@{/flights}"><span>≋</span>航班调度</a>
-            <a th:href="@{/runways}"><span>▥</span>跑道资源</a>
-            <a th:href="@{/gates}"><span>◎</span>停机位</a>
-            <a th:href="@{/simulation}"><span>◉</span>仿真控制</a>
-            <a th:href="@{/operations/conflicts}"><span>⚑</span>冲突推荐</a>
-            <a th:href="@{/operations/incidents}"><span>!</span>异常处置</a>
-            <a th:href="@{/operations/schedule}"><span>▤</span>资源排班</a>
-            <a th:href="@{/records}"><span>☷</span>事件日志</a>
-            <a th:href="@{/statistics}"><span>◌</span>统计分析</a>
-            <a th:href="@{/operations/data}"><span>↧</span>数据交换</a>
-            <a th:href="@{/operations/scenarios}"><span>◇</span>场景对比</a>
-            <a th:href="@{/operations/roles}"><span>☉</span>角色视图</a>
+        <nav class="bento-nav-links" aria-label="主导航">
+            <a th:href="@{/dashboard}">概览</a>
+            <a th:href="@{/flights}">航班</a>
+            <a th:href="@{/runways}">跑道</a>
+            <a th:href="@{/gates}">机位</a>
+            <a th:href="@{/simulation}">仿真</a>
+            <a th:href="@{/operations/conflicts}">冲突</a>
+            <a th:href="@{/operations/incidents}">异常</a>
+            <a th:href="@{/operations/schedule}">排班</a>
+            <a th:href="@{/records}">日志</a>
+            <a th:href="@{/statistics}">统计</a>
+            <a th:href="@{/operations/data}">数据</a>
+            <a th:href="@{/operations/scenarios}">场景</a>
+            <a th:href="@{/operations/roles}">角色</a>
         </nav>
 
-        <div class="sidebar-foot">
-            <label>
-                <span>当前场景</span>
-                <select>
-                    <option>日常运行场景</option>
-                    <option>大流量保障</option>
-                    <option>雷雨绕飞保障</option>
-                </select>
-            </label>
-            <div class="clock-card">
-                <strong data-live-clock>--:--:--</strong>
-                <span data-live-date>运行日期</span>
-            </div>
-        </div>
-    </aside>
-
-    <header class="command-bar">
-        <div class="command-title">
-            <button class="icon-button" type="button" aria-label="展开菜单">☰</button>
-            <strong>运行概览</strong>
-        </div>
-        <div class="ops-strip" aria-label="机场运行态势">
+        <div class="bento-nav-meta">
             <span>中雨 18°C</span>
-            <span>320°/18kt</span>
-            <span>8000m</span>
-            <span>QNH 1012</span>
-            <span>流量等级 <b>中</b></span>
-        </div>
-        <a class="alert-link" th:href="@{/records}">机场运行受限</a>
-        <div class="user-pill">
-            <span class="notification-dot">12</span>
-            <span>OPS_USER</span>
+            <span>VIS 8000m</span>
+            <strong data-live-clock>--:--:--</strong>
+            <a class="alert-link" th:href="@{/records}">运行受限</a>
         </div>
     </header>
     <script th:src="@{/js/app.js}" defer></script>
