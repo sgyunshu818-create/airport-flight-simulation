@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>数据交换</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<header th:replace="~{fragments/header :: topbar}"></header>
+<main class="container">
+    <section class="page-title">
+        <div>
+            <h1>数据交换</h1>
+            <p>导入航班计划，导出仿真日志和统计报表，便于和外部系统或实验报告衔接。</p>
+        </div>
+    </section>
+
+    <div class="alert" th:if="${importMessage}" th:text="${importMessage + '，成功 ' + successCount + ' 条，失败 ' + failedCount + ' 条'}">导入完成</div>
+
+    <section class="ops-dashboard">
+        <form class="form-grid" method="post" enctype="multipart/form-data" th:action="@{/operations/import-flights}">
+            <h2>导入航班计划 CSV</h2>
+            <label>CSV 文件
+                <input type="file" name="file" accept=".csv,text/csv" required>
+                <span class="field-hint">格式：flightNo,airline,departureAirport,arrivalAirport,flightType,aircraftType,plannedTime</span>
+            </label>
+            <div class="form-actions">
+                <button class="button primary" type="submit">上传导入</button>
+            </div>
+        </form>
+
+        <section class="panel">
+            <div class="panel-header"><h2>导出数据</h2><span class="status status-ok">CSV</span></div>
+            <div class="panel-body quick-links">
+                <a class="button primary" th:href="@{/operations/export/records.csv}">导出事件日志</a>
+                <a class="button" th:href="@{/operations/export/statistics.csv}">导出统计报表</a>
+                <a class="button" th:href="@{/flights}">查看航班数据</a>
+                <a class="button" th:href="@{/statistics}">查看统计分析</a>
+            </div>
+        </section>
+    </section>
+</main>
+</body>
+</html>

@@ -35,6 +35,12 @@ public class Gate {
     @Column(name = "current_flight_id")
     private Long currentFlightId;
 
+    @Column(name = "occupied_start_time")
+    private LocalDateTime occupiedStartTime;
+
+    @Column(name = "occupied_end_time")
+    private LocalDateTime occupiedEndTime;
+
     @Column(name = "created_time", nullable = false)
     private LocalDateTime createdTime;
 
@@ -91,6 +97,22 @@ public class Gate {
 
     public void setCurrentFlightId(Long currentFlightId) {
         this.currentFlightId = currentFlightId;
+    }
+
+    public LocalDateTime getOccupiedStartTime() {
+        return occupiedStartTime;
+    }
+
+    public void setOccupiedStartTime(LocalDateTime occupiedStartTime) {
+        this.occupiedStartTime = occupiedStartTime;
+    }
+
+    public LocalDateTime getOccupiedEndTime() {
+        return occupiedEndTime;
+    }
+
+    public void setOccupiedEndTime(LocalDateTime occupiedEndTime) {
+        this.occupiedEndTime = occupiedEndTime;
     }
 
     public LocalDateTime getCreatedTime() {

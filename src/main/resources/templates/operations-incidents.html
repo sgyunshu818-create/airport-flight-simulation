@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>异常事件处置中心</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<header th:replace="~{fragments/header :: topbar}"></header>
+<main class="container">
+    <section class="page-title">
+        <div>
+            <h1>异常事件处置中心</h1>
+            <p>将仿真日志升级为可跟踪、可处置、可闭环的运行事件工作台。</p>
+        </div>
+        <a class="button" th:href="@{/records}">原始日志</a>
+    </section>
+
+    <section class="panel">
+        <div class="panel-header">
+            <h2>事件处置清单</h2>
+            <span class="status" th:text="${#lists.size(incidents) + ' 条'}">0 条</span>
+        </div>
+        <div class="table-wrap">
+            <table class="data-table">
+                <thead><tr><th>时间</th><th>等级</th><th>类型</th><th>事件描述</th><th>关联对象</th><th>状态</th><th>推荐动作</th></tr></thead>
+                <tbody>
+                <tr th:each="item : ${incidents}">
+                    <td th:text="${item.eventTime}">14:20</td>
+                    <td><span class="status" th:classappend="${item.severity == '告警' ? ' status-warn' : ' status-ok'}" th:text="${item.severity}">提示</span></td>
+                    <td th:text="${item.eventType}">DELAY</td>
+                    <td th:text="${item.description}">说明</td>
+                    <td th:text="${item.relatedObject}">MU5532</td>
+                    <td><span class="status" th:classappend="${item.status == '处理中' ? ' status-warn' : ' status-ok'}" th:text="${item.status}">处理中</span></td>
+                    <td th:text="${item.action}">推荐动作</td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(incidents)}"><td colspan="7" class="empty">暂无异常事件。</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</main>
+</body>
+</html>

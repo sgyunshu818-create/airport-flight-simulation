@@ -1,0 +1,49 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>停机位管理</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<header th:replace="~{fragments/header :: topbar}"></header>
+<main class="container">
+    <section class="page-title row-title">
+        <div><h1>停机位管理</h1><p>维护停机位编号、适配机型和占用状态。</p></div>
+        <a class="button primary" th:href="@{/gates/new}">新增停机位</a>
+    </section>
+    <div class="alert" th:if="${error}" th:text="${error}">error</div>
+    <section class="panel">
+        <div class="panel-header">
+            <h2>停机位资源清单</h2>
+            <span class="status" th:text="${#lists.size(gates) + ' 条'}">0 条</span>
+        </div>
+        <div class="table-wrap">
+        <table class="data-table">
+            <thead><tr><th>编号</th><th>状态</th><th>适配机型</th><th>当前航班</th><th>占用开始</th><th>占用结束</th><th>操作</th></tr></thead>
+            <tbody>
+            <tr th:each="gate : ${gates}">
+                <td th:text="${gate.gateNo}">G01</td>
+                <td><span class="status" th:text="${gate.status}">IDLE</span></td>
+                <td th:text="${gate.aircraftType}">MEDIUM</td>
+                <td th:text="${gate.currentFlightId}">1</td>
+                <td th:text="${gate.occupiedStartTime}">-</td>
+                <td th:text="${gate.occupiedEndTime}">-</td>
+                <td class="actions">
+                    <a class="button small" th:href="@{/gates/{id}/edit(id=${gate.id})}">编辑</a>
+                    <form method="post" th:action="@{/gates/{id}/delete(id=${gate.id})}">
+                        <button class="button danger small" type="submit" data-confirm="确认删除该停机位？">删除</button>
+                    </form>
+                </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(gates)}"><td colspan="7" class="empty">暂无停机位数据。</td></tr>
+            </tbody>
+        </table>
+        </div>
+    </section>
+</main>
+</body>
+</html>
+
+
+

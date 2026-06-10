@@ -63,7 +63,7 @@ class RepositoryQueryTest {
         simulationRecordRepository.save(second);
         simulationRecordRepository.save(first);
 
-        assertThat(simulationTaskRepository.findTopByOrderByCreatedTimeDesc())
+        assertThat(simulationTaskRepository.findTopByOrderByCreatedTimeDescIdDesc())
                 .isPresent()
                 .get()
                 .extracting(SimulationTask::getTaskName)
@@ -73,6 +73,27 @@ class RepositoryQueryTest {
                 .containsExactly("first", "second");
     }
 
+
+    @Test
+    void filtersRecordsByTaskFlightAndEventType() {
+        SimulationTask task = simulationTaskRepository.save(createTask("日志筛选", LocalDateTime.of(2026, 6, 1, 8, 0)));
+        SimulationRecord matching = createRecord(task.getId(), LocalDateTime.of(2026, 6, 1, 8, 0), "matching");
+        matching.setFlightId(100L);
+        matching.setEventType(SimulationEventType.DELAY);
+        SimulationRecord wrongFlight = createRecord(task.getId(), LocalDateTime.of(2026, 6, 1, 8, 10), "wrong flight");
+        wrongFlight.setFlightId(200L);
+        wrongFlight.setEventType(SimulationEventType.DELAY);
+        SimulationRecord wrongType = createRecord(task.getId(), LocalDateTime.of(2026, 6, 1, 8, 20), "wrong type");
+        wrongType.setFlightId(100L);
+        wrongType.setEventType(SimulationEventType.COMPLETE);
+        simulationRecordRepository.save(matching);
+        simulationRecordRepository.save(wrongFlight);
+        simulationRecordRepository.save(wrongType);
+
+        assertThat(simulationRecordRepository.findByFilters(task.getId(), 100L, SimulationEventType.DELAY))
+                .extracting(SimulationRecord::getDescription)
+                .containsExactly("matching");
+    }
     private SimulationTask createTask(String name, LocalDateTime startTime) {
         SimulationTask task = new SimulationTask();
         task.setTaskName(name);
@@ -91,3 +112,5 @@ class RepositoryQueryTest {
         return record;
     }
 }
+
+

@@ -1,4 +1,4 @@
-CREATE DATABASE IF NOT EXISTS airport_simulation
+﻿CREATE DATABASE IF NOT EXISTS airport_simulation
     DEFAULT CHARACTER SET utf8mb4
     DEFAULT COLLATE utf8mb4_unicode_ci;
 
@@ -47,6 +47,8 @@ CREATE TABLE gate (
     status VARCHAR(32) NOT NULL DEFAULT 'IDLE',
     aircraft_type VARCHAR(32) NOT NULL,
     current_flight_id BIGINT,
+    occupied_start_time DATETIME,
+    occupied_end_time DATETIME,
     created_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
@@ -57,7 +59,7 @@ CREATE TABLE simulation_task (
     start_time DATETIME NOT NULL,
     end_time DATETIME NOT NULL,
     time_step_minutes INT NOT NULL,
-    current_time DATETIME,
+    `current_time` DATETIME,
     status VARCHAR(32) NOT NULL DEFAULT 'CREATED',
     created_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
@@ -105,3 +107,4 @@ INSERT INTO flight (
 ('ZH9108', 'Shenzhen Airlines', 'SZX', 'SHA', 'ARRIVAL', 'LARGE', NULL, '2026-06-01 08:10:00', 'SCHEDULED', 0, 2),
 ('MF8506', 'Xiamen Air', 'SHA', 'CKG', 'DEPARTURE', 'MEDIUM', '2026-06-01 08:15:00', NULL, 'SCHEDULED', 0, 0),
 ('3U8962', 'Sichuan Airlines', 'KMG', 'SHA', 'ARRIVAL', 'MEDIUM', NULL, '2026-06-01 08:15:00', 'SCHEDULED', 0, 1);
+

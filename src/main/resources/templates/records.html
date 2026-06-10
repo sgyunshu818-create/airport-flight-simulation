@@ -1,0 +1,50 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>仿真日志</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<header th:replace="~{fragments/header :: topbar}"></header>
+<main class="container">
+    <section class="page-title">
+        <h1>仿真日志</h1>
+        <p>按任务、航班和事件类型查看仿真过程记录。</p>
+    </section>
+
+    <form class="filter-bar" method="get" th:action="@{/records}">
+        <input type="number" name="taskId" placeholder="任务 ID" th:value="${taskId}">
+        <input type="number" name="flightId" placeholder="航班 ID" th:value="${flightId}">
+        <select name="eventType">
+            <option value="">全部事件</option>
+            <option th:each="item : ${eventTypes}" th:value="${item}" th:text="${item}" th:selected="${item == selectedEventType}"></option>
+        </select>
+        <button class="button" type="submit">查询</button>
+        <a class="button" th:href="@{/records}">重置</a>
+    </form>
+
+    <section class="panel">
+        <div class="panel-header">
+            <h2>事件明细</h2>
+            <span class="status" th:text="${#lists.size(records) + ' 条'}">0 条</span>
+        </div>
+        <div class="table-wrap">
+        <table class="data-table">
+            <thead><tr><th>时间</th><th>任务 ID</th><th>航班 ID</th><th>事件类型</th><th>说明</th></tr></thead>
+            <tbody>
+            <tr th:each="record : ${records}">
+                <td th:text="${record.eventTime}">2026-05-29T09:00</td>
+                <td th:text="${record.taskId}">1</td>
+                <td th:text="${record.flightId}">1</td>
+                <td><span class="status" th:text="${record.eventType}">TAKEOFF</span></td>
+                <td th:text="${record.description}">completed</td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(records)}"><td colspan="5" class="empty">暂无仿真日志。</td></tr>
+            </tbody>
+        </table>
+        </div>
+    </section>
+</main>
+</body>
+</html>

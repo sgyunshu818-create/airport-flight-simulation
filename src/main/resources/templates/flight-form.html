@@ -1,0 +1,51 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${formTitle}">航班表单</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<header th:replace="~{fragments/header :: topbar}"></header>
+<main class="container narrow">
+    <section class="page-title">
+        <h1 th:text="${formTitle}">航班表单</h1>
+    </section>
+    <div class="alert" th:if="${error}" th:text="${error}">error</div>
+    <form class="form-grid panel" method="post" th:object="${flight}" th:action="${flight.id == null} ? @{/flights} : @{/flights/{id}(id=${flight.id})}">
+        <label>航班号<input type="text" th:field="*{flightNo}" required></label>
+        <label>航空公司<input type="text" th:field="*{airline}"></label>
+        <label>出发机场<input type="text" th:field="*{departureAirport}"></label>
+        <label>到达机场<input type="text" th:field="*{arrivalAirport}"></label>
+        <label>航班类型
+            <select th:field="*{flightType}" required>
+                <option value="">请选择</option>
+                <option th:each="item : ${flightTypes}" th:value="${item}" th:text="${item}"></option>
+            </select>
+        </label>
+        <label>机型
+            <select th:field="*{aircraftType}" required>
+                <option value="">请选择</option>
+                <option th:each="item : ${aircraftTypes}" th:value="${item}" th:text="${item}"></option>
+            </select>
+        </label>
+        <label>计划起飞时间<input type="datetime-local" th:field="*{plannedDepartureTime}"><span class="field-hint">起飞航班必填</span></label>
+        <label>计划降落时间<input type="datetime-local" th:field="*{plannedArrivalTime}"><span class="field-hint">到达航班必填</span></label>
+        <label>状态
+            <select th:field="*{status}">
+                <option th:each="item : ${statuses}" th:value="${item}" th:text="${item}"></option>
+            </select>
+        </label>
+        <label>延误分钟<input type="number" min="0" th:field="*{delayMinutes}"></label>
+        <label>优先级<input type="number" min="0" th:field="*{priority}"></label>
+        <div class="form-actions">
+            <button class="button primary" type="submit">保存</button>
+            <a class="button" th:href="@{/flights}">返回</a>
+        </div>
+    </form>
+</main>
+</body>
+</html>
+
+
+

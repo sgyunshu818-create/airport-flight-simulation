@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>多场景方案对比</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<header th:replace="~{fragments/header :: topbar}"></header>
+<main class="container">
+    <section class="page-title">
+        <div>
+            <h1>多场景方案对比</h1>
+            <p>对比日常运行、雷雨保障、大流量保障和跑道关闭场景下的关键指标。</p>
+        </div>
+        <a class="button primary" th:href="@{/simulation}">进入仿真</a>
+    </section>
+
+    <section class="panel">
+        <div class="panel-header"><h2>方案指标对比</h2><span class="status">SCENARIO</span></div>
+        <div class="table-wrap">
+            <table class="data-table">
+                <thead><tr><th>场景</th><th>完成率</th><th>延误率</th><th>跑道占用率</th><th>建议</th></tr></thead>
+                <tbody>
+                <tr th:each="item : ${scenarios}">
+                    <td th:text="${item.scenarioName}">日常运行</td>
+                    <td><span class="status status-ok" th:text="${item.completionRate + '%'}">86%</span></td>
+                    <td><span class="status status-warn" th:text="${item.delayRate + '%'}">7%</span></td>
+                    <td th:text="${item.runwayOccupancyRate + '%'}">68%</td>
+                    <td th:text="${item.recommendation}">建议</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</main>
+</body>
+</html>

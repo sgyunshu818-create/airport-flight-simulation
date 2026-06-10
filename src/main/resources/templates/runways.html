@@ -1,0 +1,49 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>跑道管理</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<header th:replace="~{fragments/header :: topbar}"></header>
+<main class="container">
+    <section class="page-title row-title">
+        <div><h1>跑道管理</h1><p>维护跑道编号、资源状态和支持类型。</p></div>
+        <a class="button primary" th:href="@{/runways/new}">新增跑道</a>
+    </section>
+    <div class="alert" th:if="${error}" th:text="${error}">error</div>
+    <section class="panel">
+        <div class="panel-header">
+            <h2>跑道资源清单</h2>
+            <span class="status" th:text="${#lists.size(runways) + ' 条'}">0 条</span>
+        </div>
+        <div class="table-wrap">
+        <table class="data-table">
+            <thead><tr><th>编号</th><th>状态</th><th>支持类型</th><th>当前航班</th><th>占用开始</th><th>占用结束</th><th>操作</th></tr></thead>
+            <tbody>
+            <tr th:each="runway : ${runways}">
+                <td th:text="${runway.runwayNo}">R01</td>
+                <td><span class="status" th:text="${runway.status}">IDLE</span></td>
+                <td th:text="${runway.supportType}">BOTH</td>
+                <td th:text="${runway.currentFlightId}">1</td>
+                <td th:text="${runway.occupiedStartTime}">-</td>
+                <td th:text="${runway.occupiedEndTime}">-</td>
+                <td class="actions">
+                    <a class="button small" th:href="@{/runways/{id}/edit(id=${runway.id})}">编辑</a>
+                    <form method="post" th:action="@{/runways/{id}/delete(id=${runway.id})}">
+                        <button class="button danger small" type="submit" data-confirm="确认删除该跑道？">删除</button>
+                    </form>
+                </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(runways)}"><td colspan="7" class="empty">暂无跑道数据。</td></tr>
+            </tbody>
+        </table>
+        </div>
+    </section>
+</main>
+</body>
+</html>
+
+
+

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>系统登录 - 天枢机场仿真运营系统</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+    <script th:src="@{/js/app.js}" defer></script>
+</head>
+<body class="login-page login-intro-mode">
+<canvas class="login-particle-canvas" data-login-particles aria-hidden="true"></canvas>
+
+<main class="mission-login">
+    <section class="mission-brief" aria-label="天枢机场仿真运营系统">
+        <div class="mission-kicker">
+            <span>ORBITAL OPS</span>
+            <strong>TS-FlightSim / 06</strong>
+        </div>
+
+        <div class="mission-copy">
+            <p class="mission-eyebrow">AIRPORT OPERATIONS SIMULATION</p>
+            <h1>
+                <span>天枢空港</span>
+                <span>仿真中枢</span>
+            </h1>
+            <p class="mission-lead">航班调度 · 跑道容量 · 机位资源 · 异常处置</p>
+            <button class="mission-enter" type="button" data-login-enter aria-label="进入登录验证">
+                <span>进入任务控制</span>
+                <b>LAUNCH</b>
+            </button>
+        </div>
+
+        <div class="mission-telemetry" aria-label="运行遥测指标">
+            <div><span>RUNWAY</span><strong>36L / 18R</strong></div>
+            <div><span>VISIBILITY</span><strong>8000m</strong></div>
+            <div><span>WIND</span><strong>320° / 18kt</strong></div>
+        </div>
+
+        <div class="orbit-visual" aria-hidden="true">
+            <span class="orbit-ring ring-one"></span>
+            <span class="orbit-ring ring-two"></span>
+            <span class="orbit-ring ring-three"></span>
+            <span class="orbit-line"></span>
+            <span class="orbital-aircraft">✈</span>
+        </div>
+    </section>
+
+    <section class="mission-auth" aria-label="登录表单">
+        <div class="auth-panel">
+            <div class="auth-status">
+                <span class="signal-dot"></span>
+                <span>SECURE CHANNEL ONLINE</span>
+            </div>
+            <div class="login-card-header">
+                <p>MISSION ACCESS</p>
+                <h2>身份验证</h2>
+            </div>
+            <form th:action="@{/login}" method="post" class="login-form">
+                <label>
+                    <span>账号</span>
+                    <input type="text" name="username" value="admin" autocomplete="username" required>
+                </label>
+                <label>
+                    <span>密码</span>
+                    <input type="password" name="password" value="123456" autocomplete="current-password" required>
+                </label>
+                <button type="submit" class="button primary login-button">进入系统</button>
+            </form>
+            <div class="login-hint">
+                <span>演示账号：admin</span>
+                <span>演示密码：123456</span>
+            </div>
+        </div>
+    </section>
+</main>
+</body>
+</html>

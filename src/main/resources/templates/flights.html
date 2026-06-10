@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>航班管理</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<header th:replace="~{fragments/header :: topbar}"></header>
+<main class="container">
+    <section class="page-title row-title">
+        <div>
+            <h1>航班管理</h1>
+            <p>维护计划航班、机型、状态和优先级。</p>
+        </div>
+        <a class="button primary" th:href="@{/flights/new}">新增航班</a>
+    </section>
+    <div class="alert" th:if="${error}" th:text="${error}">error</div>
+
+    <form class="filter-bar" method="get" th:action="@{/flights}">
+        <input type="text" name="keyword" placeholder="按航班号搜索" th:value="${keyword}">
+        <input type="text" name="airline" placeholder="按航空公司搜索" th:value="${airline}">
+        <select name="status">
+            <option value="">全部状态</option>
+            <option th:each="item : ${statuses}" th:value="${item}" th:text="${item}" th:selected="${item == selectedStatus}"></option>
+        </select>
+        <select name="flightType">
+            <option value="">全部类型</option>
+            <option th:each="item : ${flightTypes}" th:value="${item}" th:text="${item}" th:selected="${item == selectedFlightType}"></option>
+        </select>
+        <button class="button" type="submit">查询</button>
+        <a class="button" th:href="@{/flights}">重置</a>
+    </form>
+
+    <section class="panel">
+        <div class="panel-header">
+            <h2>航班运行清单</h2>
+            <span class="status" th:text="${#lists.size(flights) + ' 条'}">0 条</span>
+        </div>
+        <div class="table-wrap">
+        <table class="data-table">
+            <thead>
+            <tr>
+                <th>航班号</th><th>航空公司</th><th>类型</th><th>机型</th><th>计划起飞</th><th>计划降落</th><th>状态</th><th>延误</th><th>优先级</th><th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="flight : ${flights}">
+                <td th:text="${flight.flightNo}">CA1001</td>
+                <td th:text="${flight.airline}">Air China</td>
+                <td th:text="${flight.flightType}">DEPARTURE</td>
+                <td th:text="${flight.aircraftType}">MEDIUM</td>
+                <td th:text="${flight.plannedDepartureTime}">2026-05-29T09:00</td>
+                <td th:text="${flight.plannedArrivalTime}">2026-05-29T10:00</td>
+                <td><span class="status" th:text="${flight.status}">SCHEDULED</span></td>
+                <td th:text="${flight.delayMinutes}">0</td>
+                <td th:text="${flight.priority}">0</td>
+                <td class="actions">
+                    <a class="button small" th:href="@{/flights/{id}/edit(id=${flight.id})}">编辑</a>
+                    <form method="post" th:action="@{/flights/{id}/delete(id=${flight.id})}">
+                        <button class="button danger small" type="submit" data-confirm="确认删除该航班？">删除</button>
+                    </form>
+                </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(flights)}"><td colspan="10" class="empty">暂无航班数据。</td></tr>
+            </tbody>
+        </table>
+        </div>
+    </section>
+</main>
+</body>
+</html>

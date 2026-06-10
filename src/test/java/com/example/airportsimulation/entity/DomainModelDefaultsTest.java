@@ -6,6 +6,8 @@ import com.example.airportsimulation.enums.FlightStatus;
 import com.example.airportsimulation.enums.ResourceStatus;
 import com.example.airportsimulation.enums.RunwaySupportType;
 import com.example.airportsimulation.enums.SimulationTaskStatus;
+import jakarta.persistence.Column;
+import java.lang.reflect.Field;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.Test;
 
@@ -45,5 +47,12 @@ class DomainModelDefaultsTest {
 
         assertThat(task.getStatus()).isEqualTo(SimulationTaskStatus.CREATED);
         assertThat(task.getCurrentTime()).isEqualTo(startTime);
+    }
+
+    @Test
+    void simulationTaskCurrentTimeColumnIsQuotedForMySql() throws Exception {
+        Field currentTime = SimulationTask.class.getDeclaredField("currentTime");
+
+        assertThat(currentTime.getAnnotation(Column.class).name()).isEqualTo("`current_time`");
     }
 }

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>冲突检测与资源推荐</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<header th:replace="~{fragments/header :: topbar}"></header>
+<main class="container">
+    <section class="page-title">
+        <div>
+            <h1>冲突检测与资源推荐</h1>
+            <p>识别跑道、停机位、航班延误和资源匹配风险，并给出可执行建议。</p>
+        </div>
+    </section>
+
+    <section class="ops-dashboard">
+        <section class="panel">
+            <div class="panel-header">
+                <h2>资源冲突清单</h2>
+                <span class="status" th:text="${#lists.size(conflicts) + ' 条'}">0 条</span>
+            </div>
+            <div class="table-wrap">
+                <table class="data-table">
+                    <thead><tr><th>类型</th><th>对象</th><th>说明</th><th>等级</th><th>处置建议</th></tr></thead>
+                    <tbody>
+                    <tr th:each="item : ${conflicts}">
+                        <td th:text="${item.type}">航班运行压力</td>
+                        <td th:text="${item.target}">CA1357</td>
+                        <td th:text="${item.description}">说明</td>
+                        <td><span class="status" th:classappend="${item.severity == '严重' ? ' status-danger' : ' status-warn'}" th:text="${item.severity}">预警</span></td>
+                        <td th:text="${item.suggestion}">推荐资源</td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(conflicts)}"><td colspan="5" class="empty">当前没有检测到资源冲突。</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="panel">
+            <div class="panel-header">
+                <h2>自动推荐</h2>
+                <span class="status status-ok">AI RULES</span>
+            </div>
+            <div class="table-wrap">
+                <table class="data-table">
+                    <thead><tr><th>航班号</th><th>类型</th><th>推荐资源</th><th>推荐原因</th></tr></thead>
+                    <tbody>
+                    <tr th:each="item : ${recommendations}">
+                        <td th:text="${item.flightNo}">MU5532</td>
+                        <td th:text="${item.flightType}">ARRIVAL</td>
+                        <td><span class="status status-ok" th:text="${item.recommendedResource}">A12</span></td>
+                        <td th:text="${item.reason}">按状态推荐</td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(recommendations)}"><td colspan="4" class="empty">暂无待推荐航班。</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </section>
+</main>
+</body>
+</html>

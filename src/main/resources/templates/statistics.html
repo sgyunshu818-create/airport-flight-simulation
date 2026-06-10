@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>统计分析 - 天枢机场</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<header th:replace="~{fragments/header :: topbar}"></header>
+<main class="container">
+    <section class="page-title">
+        <div>
+            <h1>统计分析</h1>
+            <p>汇总航班完成、延误压力、跑道和停机位资源利用情况。</p>
+        </div>
+    </section>
+
+    <section class="metric-grid">
+        <div class="metric"><span class="metric-icon">✓</span><div class="metric-content"><span>完成率</span><strong th:text="${summary.completionRate + '%'}">0%</strong><small class="trend-good">运行兑现</small></div></div>
+        <div class="metric"><span class="metric-icon">◷</span><div class="metric-content"><span>延误率</span><strong th:text="${summary.delayRate + '%'}">0%</strong><small class="trend-up">压力指标</small></div></div>
+        <div class="metric"><span class="metric-icon">▥</span><div class="metric-content"><span>跑道占用率</span><strong th:text="${summary.runwayOccupancyRate + '%'}">0%</strong><small>资源利用</small></div></div>
+        <div class="metric"><span class="metric-icon">P</span><div class="metric-content"><span>停机位占用率</span><strong th:text="${summary.gateOccupancyRate + '%'}">0%</strong><small>资源利用</small></div></div>
+        <div class="metric"><span class="metric-icon">!</span><div class="metric-content"><span>平均延误</span><strong th:text="${summary.averageDelayMinutes}">0</strong><small>分钟</small></div></div>
+        <div class="metric"><span class="metric-icon">↑</span><div class="metric-content"><span>最大延误</span><strong th:text="${summary.maxDelayMinutes}">0</strong><small>分钟</small></div></div>
+    </section>
+
+    <section class="ops-dashboard">
+        <section class="panel">
+            <div class="panel-header"><h2>运行效率</h2></div>
+            <div class="panel-body resource-list">
+                <div class="resource-row"><span>完成率</span><div class="bar"><span th:style="'--value:' + ${summary.completionRate} + '%'"></span></div><strong th:text="${summary.completionRate + '%'}">0%</strong></div>
+                <div class="resource-row"><span>延误率</span><div class="bar"><span th:style="'--value:' + ${summary.delayRate} + '%'"></span></div><strong th:text="${summary.delayRate + '%'}">0%</strong></div>
+                <div class="resource-row"><span>跑道占用率</span><div class="bar"><span th:style="'--value:' + ${summary.runwayOccupancyRate} + '%'"></span></div><strong th:text="${summary.runwayOccupancyRate + '%'}">0%</strong></div>
+                <div class="resource-row"><span>停机位占用率</span><div class="bar"><span th:style="'--value:' + ${summary.gateOccupancyRate} + '%'"></span></div><strong th:text="${summary.gateOccupancyRate + '%'}">0%</strong></div>
+            </div>
+        </section>
+
+        <section class="panel">
+            <div class="panel-header"><h2>核心数据</h2></div>
+            <div class="table-wrap">
+                <table class="data-table">
+                    <tbody>
+                    <tr><th>航班总数</th><td th:text="${summary.totalFlights}">0</td></tr>
+                    <tr><th>起飞航班</th><td th:text="${summary.departureFlights}">0</td></tr>
+                    <tr><th>降落航班</th><td th:text="${summary.arrivalFlights}">0</td></tr>
+                    <tr><th>已完成航班</th><td th:text="${summary.completedFlights}">0</td></tr>
+                    <tr><th>延误航班</th><td th:text="${summary.delayedFlights}">0</td></tr>
+                    <tr><th>等待航班</th><td th:text="${summary.waitingFlights}">0</td></tr>
+                    <tr><th>空闲跑道</th><td th:text="${summary.idleRunways}">0</td></tr>
+                    <tr><th>空闲停机位</th><td th:text="${summary.idleGates}">0</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </section>
+</main>
+</body>
+</html>

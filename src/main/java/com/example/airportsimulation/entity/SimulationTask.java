@@ -32,7 +32,7 @@ public class SimulationTask {
     @Column(name = "time_step_minutes", nullable = false)
     private int timeStepMinutes;
 
-    @Column(name = "current_time")
+    @Column(name = "`current_time`")
     private LocalDateTime currentTime;
 
     @Enumerated(EnumType.STRING)

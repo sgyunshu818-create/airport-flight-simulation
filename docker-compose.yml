@@ -1,0 +1,44 @@
+services:
+  db:
+    image: mysql:8.4
+    container_name: airport-simulation-db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-airport_root_password}
+      MYSQL_DATABASE: airport_simulation
+      MYSQL_USER: ${MYSQL_USER:-airport_user}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-airport_password}
+      TZ: Asia/Shanghai
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+    volumes:
+      - airport_mysql_data:/var/lib/mysql
+      - ./database/airport_simulation.sql:/docker-entrypoint-initdb.d/airport_simulation.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -u$${MYSQL_USER} -p$${MYSQL_PASSWORD} --silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+
+  app:
+    build:
+      context: .
+    container_name: airport-simulation-app
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      SERVER_ADDRESS: 0.0.0.0
+      SERVER_PORT: 8080
+      DB_URL: jdbc:mysql://db:3306/airport_simulation?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true&useSSL=false
+      DB_USERNAME: ${MYSQL_USER:-airport_user}
+      DB_PASSWORD: ${MYSQL_PASSWORD:-airport_password}
+      JPA_DDL_AUTO: update
+      JPA_SHOW_SQL: "false"
+    ports:
+      - "${APP_PORT:-8080}:8080"
+
+volumes:
+  airport_mysql_data:

@@ -1,0 +1,34 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${formTitle}">跑道表单</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<header th:replace="~{fragments/header :: topbar}"></header>
+<main class="container narrow">
+    <section class="page-title"><h1 th:text="${formTitle}">跑道表单</h1></section>
+    <div class="alert" th:if="${error}" th:text="${error}">error</div>
+    <form class="form-grid panel" method="post" th:object="${runway}" th:action="${runway.id == null} ? @{/runways} : @{/runways/{id}(id=${runway.id})}">
+        <label>跑道编号<input type="text" th:field="*{runwayNo}" required></label>
+        <label>状态
+            <select th:field="*{status}">
+                <option th:each="item : ${statuses}" th:value="${item}" th:text="${item}"></option>
+            </select>
+        </label>
+        <label>支持类型
+            <select th:field="*{supportType}">
+                <option th:each="item : ${supportTypes}" th:value="${item}" th:text="${item}"></option>
+            </select>
+        </label>
+        <div class="form-actions">
+            <button class="button primary" type="submit">保存</button>
+            <a class="button" th:href="@{/runways}">返回</a>
+        </div>
+    </form>
+</main>
+</body>
+</html>
+
+

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="topbar">
+    <aside class="sidebar">
+        <a class="brand" th:href="@{/dashboard}" aria-label="返回运行概览">
+            <span class="brand-mark" aria-hidden="true">AF</span>
+            <span class="brand-text">
+                <strong>天枢机场</strong>
+                <small>仿真运营系统</small>
+            </span>
+        </a>
+
+        <nav class="side-nav" aria-label="主导航">
+            <a th:href="@{/dashboard}"><span>⌂</span>运行概览</a>
+            <a th:href="@{/flights}"><span>≋</span>航班调度</a>
+            <a th:href="@{/runways}"><span>▥</span>跑道资源</a>
+            <a th:href="@{/gates}"><span>◎</span>停机位</a>
+            <a th:href="@{/simulation}"><span>◉</span>仿真控制</a>
+            <a th:href="@{/operations/conflicts}"><span>⚑</span>冲突推荐</a>
+            <a th:href="@{/operations/incidents}"><span>!</span>异常处置</a>
+            <a th:href="@{/operations/schedule}"><span>▤</span>资源排班</a>
+            <a th:href="@{/records}"><span>☷</span>事件日志</a>
+            <a th:href="@{/statistics}"><span>◌</span>统计分析</a>
+            <a th:href="@{/operations/data}"><span>↧</span>数据交换</a>
+            <a th:href="@{/operations/scenarios}"><span>◇</span>场景对比</a>
+            <a th:href="@{/operations/roles}"><span>☉</span>角色视图</a>
+        </nav>
+
+        <div class="sidebar-foot">
+            <label>
+                <span>当前场景</span>
+                <select>
+                    <option>日常运行场景</option>
+                    <option>大流量保障</option>
+                    <option>雷雨绕飞保障</option>
+                </select>
+            </label>
+            <div class="clock-card">
+                <strong data-live-clock>--:--:--</strong>
+                <span data-live-date>运行日期</span>
+            </div>
+        </div>
+    </aside>
+
+    <header class="command-bar">
+        <div class="command-title">
+            <button class="icon-button" type="button" aria-label="展开菜单">☰</button>
+            <strong>运行概览</strong>
+        </div>
+        <div class="ops-strip" aria-label="机场运行态势">
+            <span>中雨 18°C</span>
+            <span>320°/18kt</span>
+            <span>8000m</span>
+            <span>QNH 1012</span>
+            <span>流量等级 <b>中</b></span>
+        </div>
+        <a class="alert-link" th:href="@{/records}">机场运行受限</a>
+        <div class="user-pill">
+            <span class="notification-dot">12</span>
+            <span>OPS_USER</span>
+        </div>
+    </header>
+    <script th:src="@{/js/app.js}" defer></script>
+</div>
+</body>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>资源甘特图</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<header th:replace="~{fragments/header :: topbar}"></header>
+<main class="container">
+    <section class="page-title">
+        <div>
+            <h1>资源甘特图</h1>
+            <p>按时间轴展示航班、跑道和停机位占用情况，用于发现拥堵和排班风险。</p>
+        </div>
+    </section>
+
+    <section class="panel">
+        <div class="panel-header">
+            <h2>运行排班视图</h2>
+            <span class="status" th:text="${#lists.size(items) + ' 项'}">0 项</span>
+        </div>
+        <div class="gantt-board">
+            <div class="gantt-scale">
+                <span>08:00</span><span>10:00</span><span>12:00</span><span>14:00</span><span>16:00</span><span>18:00</span><span>20:00</span>
+            </div>
+            <div class="gantt-row" th:each="item, iter : ${items}">
+                <div class="gantt-label">
+                    <strong th:text="${item.resource}">CA1357</strong>
+                    <span th:text="${item.resourceType + ' · ' + item.label}">FLIGHT · 航班计划</span>
+                </div>
+                <div class="gantt-track">
+                    <span class="gantt-block"
+                          th:classappend="${item.status == 'DELAYED' || item.status == 'OCCUPIED' ? ' warn' : (item.status == 'COMPLETED' || item.status == 'IDLE' ? ' ok' : '')}"
+                          th:style="'--offset:' + ${(iter.index * 7) % 62} + '%; --width:' + ${item.widthPercent} + '%'"
+                          th:text="${item.time}">14:20</span>
+                </div>
+                <span class="status" th:text="${item.status}">SCHEDULED</span>
+            </div>
+            <div th:if="${#lists.isEmpty(items)}" class="empty">暂无排班数据。</div>
+        </div>
+    </section>
+</main>
+</body>
+</html>
