@@ -10,7 +10,7 @@
 <header th:replace="~{fragments/header :: topbar}"></header>
 <main class="container">
     <section class="page-title row-title">
-        <div><h1>跑道管理</h1><p>维护跑道编号、资源状态和支持类型。</p></div>
+        <div><h1>跑道管理</h1></div>
         <a class="button primary" th:href="@{/runways/new}">新增跑道</a>
     </section>
     <div class="alert" th:if="${error}" th:text="${error}">error</div>

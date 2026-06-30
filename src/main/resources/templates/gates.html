@@ -10,7 +10,7 @@
 <header th:replace="~{fragments/header :: topbar}"></header>
 <main class="container">
     <section class="page-title row-title">
-        <div><h1>停机位管理</h1><p>维护停机位编号、适配机型和占用状态。</p></div>
+        <div><h1>停机位管理</h1></div>
         <a class="button primary" th:href="@{/gates/new}">新增停机位</a>
     </section>
     <div class="alert" th:if="${error}" th:text="${error}">error</div>
